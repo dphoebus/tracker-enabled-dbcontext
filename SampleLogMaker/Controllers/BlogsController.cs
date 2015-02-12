@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
-using System.Linq;
-using System.Net;
-using System.Web;
-using System.Web.Mvc;
-using SampleLogMaker.Models;
-
-namespace SampleLogMaker.Controllers
+﻿namespace SampleLogMaker.Controllers
 {
+    using System.Linq;
+    using System.Net;
+    using System.Web.Mvc;
+
+    using SampleLogMaker.Models;
+
     public class BlogsController : Controller
     {
-        private ApplicationDbContext db = new ApplicationDbContext();
+        readonly ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: /Blogs/
         public ActionResult Index()
@@ -27,7 +23,7 @@ namespace SampleLogMaker.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Blog blog = db.Blogs.Find(id);
+            var blog = db.Blogs.Find(id);
             if (blog == null)
             {
                 return HttpNotFound();
@@ -65,7 +61,7 @@ namespace SampleLogMaker.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Blog blog = db.Blogs.Find(id);
+            var blog = db.Blogs.Find(id);
             if (blog == null)
             {
                 return HttpNotFound();
@@ -97,7 +93,7 @@ namespace SampleLogMaker.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Blog blog = db.Blogs.Find(id);
+            var blog = db.Blogs.Find(id);
             if (blog == null)
             {
                 return HttpNotFound();
@@ -106,11 +102,12 @@ namespace SampleLogMaker.Controllers
         }
 
         // POST: /Blogs/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost]
+        [ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Blog blog = db.Blogs.Find(id);
+            var blog = db.Blogs.Find(id);
             db.Blogs.Remove(blog);
             db.SaveChanges(User.Identity.Name);
             return RedirectToAction("Index");

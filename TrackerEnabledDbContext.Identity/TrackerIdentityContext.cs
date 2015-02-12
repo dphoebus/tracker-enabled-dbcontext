@@ -1,17 +1,25 @@
-﻿using Microsoft.AspNet.Identity.EntityFramework;
-using System.Collections.Generic;
-using System.Data.Entity;
-using TrackerEnabledDbContext.Common;
-using TrackerEnabledDbContext.Common.Interfaces;
-using TrackerEnabledDbContext.Common.Models;
-
-namespace TrackerEnabledDbContext.Identity
+﻿namespace TrackerEnabledDbContext.Identity
 {
-    public class TrackerIdentityContext<TUser> : IdentityDbContext<TUser>, ITrackerContext where TUser : IdentityUser
-    {
-        public TrackerIdentityContext(): base() { }
+    using System.Collections.Generic;
+    using System.Data.Entity;
 
-        public TrackerIdentityContext(string connectinString) : base(connectinString) { }
+    using Microsoft.AspNet.Identity.EntityFramework;
+
+    using TrackerEnabledDbContext.Common;
+    using TrackerEnabledDbContext.Common.Interfaces;
+    using TrackerEnabledDbContext.Common.Models;
+
+    public class TrackerIdentityContext<TUser> : IdentityDbContext<TUser>, ITrackerContext
+        where TUser : IdentityUser
+    {
+        public TrackerIdentityContext()
+        {
+        }
+
+        public TrackerIdentityContext(string connectinString)
+            : this(connectinString, false)
+        {
+        }
 
         // Summary:
         //     Constructor which takes the connection string to use
@@ -21,9 +29,13 @@ namespace TrackerEnabledDbContext.Identity
         //
         //   throwIfV1Schema:
         //     Will throw an exception if the schema matches that of Identity 1.0.0
-        public TrackerIdentityContext(string nameOrConnectionString, bool throwIfV1Schema) : base(nameOrConnectionString, throwIfV1Schema) { }
+        public TrackerIdentityContext(string nameOrConnectionString, bool throwIfV1Schema)
+            : base(nameOrConnectionString, throwIfV1Schema)
+        {
+        }
 
         public DbSet<AuditLog> AuditLog { get; set; }
+
         public DbSet<AuditLogDetail> LogDetails { get; set; }
 
         /// <summary>

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.22013.1
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleLogMaker", "SampleLogMaker\SampleLogMaker.csproj", "{3EE0FE30-1616-4EBE-9694-B4F4017C3C99}"
 EndProject
@@ -12,6 +12,13 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrackerEnabledDbContext.Common", "TrackerEnabledDbContext.Common\TrackerEnabledDbContext.Common.csproj", "{AC9808CC-8932-40AE-8F26-3FBA558A5549}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrackerEnabledDbContext", "TrackerEnabledDbContext\TrackerEnabledDbContext.csproj", "{BDE8FEB8-3A4F-491D-9AAD-426C355AAC76}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{2A9EA1D4-7608-40BA-8A9F-A08B0161C60B}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,22 +1,21 @@
-﻿using System;
-using System.ComponentModel;
-using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SampleLogMaker.Models;
-
-namespace Tests
+﻿namespace Tests
 {
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+    using SampleLogMaker.Models;
+
     [TestClass]
     public class CRUD_Tests : PersistanceTests
     {
         Blog b;
+
         Comment c;
 
         [TestInitialize]
         public void LocalInitialise()
         {
-            b = db.CreateBlog();
-            c = db.CreateComment(b);
+            b = this.DB.CreateBlog();
+            c = this.DB.CreateComment(b);
         }
 
         [TestMethod]
@@ -34,7 +33,7 @@ namespace Tests
         [TestMethod]
         public void Can_Fetch_Comment_and_its_blog()
         {
-            var comment = db.Comments.Find(c.Id);
+            var comment = this.DB.Comments.Find(c.Id);
 
             Assert.IsNotNull(comment);
             Assert.IsNotNull(comment.ParentBlog);
@@ -43,12 +42,12 @@ namespace Tests
         [TestMethod]
         public void Can_save_recursively()
         {
-            var blog = new Blog {Description = "abc",Title ="qwe" };
+            var blog = new Blog { Description = "abc", Title = "qwe" };
 
             var comment = new Comment { ParentBlog = blog, Text = "tyu" };
-            db.Comments.Add(comment);
+            this.DB.Comments.Add(comment);
 
-            db.SaveChanges("unit test");
+            this.DB.SaveChanges("unit test");
 
             Assert.IsTrue(blog.Id > 0);
             Assert.IsTrue(comment.Id > 0);

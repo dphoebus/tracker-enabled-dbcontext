@@ -1,15 +1,16 @@
-﻿using System;
-using System.Data.Entity.Infrastructure;
-using System.Linq;
-using TrackerEnabledDbContext.Common.Extensions;
-using TrackerEnabledDbContext.Common.Interfaces;
-using TrackerEnabledDbContext.Common.Models;
-
-namespace TrackerEnabledDbContext.Common
+﻿namespace TrackerEnabledDbContext.Common
 {
+    using System;
+    using System.Data.Entity.Infrastructure;
+    using System.Linq;
+
+    using TrackerEnabledDbContext.Common.Extensions;
+    using TrackerEnabledDbContext.Common.Interfaces;
+    using TrackerEnabledDbContext.Common.Models;
+
     public class LogAuditor : IDisposable
     {
-        private readonly DbEntityEntry _dbEntry;
+        readonly DbEntityEntry _dbEntry;
 
         public LogAuditor(DbEntityEntry dbEntry)
         {
@@ -30,25 +31,22 @@ namespace TrackerEnabledDbContext.Common
             var keyName = entityType.GetPrimaryKeyName();
 
             var newlog = new AuditLog
-            {
-                UserName = userName.ToString(),
-                EventDateUTC = changeTime,
-                EventType = eventType,
-                TableName = entityType.GetTableName(context),
-                RecordId = _dbEntry.GetDatabaseValue(keyName).ToString()
-            };
-            
+                             {
+                                 UserName = userName.ToString(),
+                                 EventDateUTC = changeTime,
+                                 EventType = eventType,
+                                 TableName = entityType.GetTableName(context),
+                                 RecordId = _dbEntry.GetDatabaseValue(keyName).ToString()
+                             };
+
             using (var detailsAuditor = new LogDetailsAuditor(_dbEntry, newlog))
-            {
                 newlog.LogDetails = detailsAuditor.CreateLogDetails().ToList();
-            }
 
             return newlog;
         }
 
         public void Dispose()
         {
-            
         }
     }
 }

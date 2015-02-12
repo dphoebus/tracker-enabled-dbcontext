@@ -1,34 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
-using System.Linq;
-using System.Net;
-using System.Web;
-using System.Web.Mvc;
-using SampleLogMaker.Models;
-
-namespace SampleLogMaker.Controllers
+﻿namespace SampleLogMaker.Controllers
 {
+    using System.Linq;
+    using System.Net;
+    using System.Web.Mvc;
+
+    using SampleLogMaker.Models;
+
     public class CommentsController : Controller
     {
-        private ApplicationDbContext db = new ApplicationDbContext();
+        readonly ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: /Comments/
         public ActionResult Index(int? blogId = null)
         {
-
-            var vm = blogId.HasValue? db.Comments.Where(c => c.ParentBlog.Id == blogId).ToList()
-                :
-                db.Comments.ToList()
-            ;
+            var vm = blogId.HasValue
+                ? db.Comments.Where(c => c.ParentBlog.Id == blogId).ToList()
+                : db.Comments.ToList();
             return View(vm);
         }
-         
+
         // GET: /Comments/Details/5
         public ActionResult Details(int id)
         {
-            Comment comment = db.Comments.Find(id);
+            var comment = db.Comments.Find(id);
             return View(comment);
         }
 
@@ -67,7 +61,7 @@ namespace SampleLogMaker.Controllers
         // GET: /Comments/Edit/5
         public ActionResult Edit(int? id)
         {
-            Comment comment = db.Comments.Find(id);
+            var comment = db.Comments.Find(id);
             ViewBag.Blogs = db.Blogs;
             return View(comment);
         }
@@ -106,7 +100,7 @@ namespace SampleLogMaker.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Comment comment = db.Comments.Find(id);
+            var comment = db.Comments.Find(id);
             if (comment == null)
             {
                 return HttpNotFound();
@@ -115,11 +109,12 @@ namespace SampleLogMaker.Controllers
         }
 
         // POST: /Comments/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost]
+        [ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Comment comment = db.Comments.Find(id);
+            var comment = db.Comments.Find(id);
             db.Comments.Remove(comment);
             db.SaveChanges(User.Identity.Name);
             return RedirectToAction("Index");

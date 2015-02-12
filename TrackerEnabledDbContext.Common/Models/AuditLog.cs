@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace TrackerEnabledDbContext.Common.Models
+﻿namespace TrackerEnabledDbContext.Common.Models
 {
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+
     /// <summary>
     /// This model class is used to store the changes made in datbase values
     /// For the audit purpose. Only selected tables can be tracked with the help of TrackChangesAttribute Attribute present in the common library.
@@ -37,6 +37,5 @@ namespace TrackerEnabledDbContext.Common.Models
         public string RecordId { get; set; }
 
         public virtual ICollection<AuditLogDetail> LogDetails { get; set; }
-
     }
 }

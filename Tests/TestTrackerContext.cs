@@ -1,9 +1,11 @@
-﻿using SampleLogMaker.Models;
-using System.Data.Entity;
-using TrackerEnabledDbContext;
-
-namespace Tests
+﻿namespace Tests
 {
+    using System.Data.Entity;
+
+    using SampleLogMaker.Models;
+
+    using TrackerEnabledDbContext;
+
     public class TestTrackerContext : TrackerContext
     {
         public TestTrackerContext()
@@ -12,6 +14,7 @@ namespace Tests
         }
 
         public DbSet<Blog> Blogs { get; set; }
+
         public DbSet<Comment> Comments { get; set; }
     }
 }

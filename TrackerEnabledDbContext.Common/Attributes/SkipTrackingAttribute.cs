@@ -9,10 +9,10 @@ namespace System.ComponentModel.DataAnnotations
     public class SkipTrackingAttribute : Attribute
     {
         public bool Enabled { get; set; }
+
         public SkipTrackingAttribute(bool skipTracking = true)
         {
             Enabled = skipTracking;
         }
-
     }
 }

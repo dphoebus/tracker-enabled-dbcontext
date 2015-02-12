@@ -2,17 +2,18 @@
 namespace SampleLogMaker.MyMigrations
 {
     using System.CodeDom.Compiler;
+    using System.Data.Entity.Migrations;
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.1-30610")]
-    public sealed partial class Addedforkeyforblog : IMigrationMetadata
+    public sealed partial class IdentityUpdate : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(Addedforkeyforblog));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(IdentityUpdate));
         
         string IMigrationMetadata.Id
         {
-            get { return "201411011747380_added forkey for blog"; }
+            get { return "201502121818146_IdentityUpdate"; }
         }
         
         string IMigrationMetadata.Source

@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace SampleLogMaker.ViewModels
+﻿namespace SampleLogMaker.ViewModels
 {
-    public class BaseHistoryVM
+    using System;
+    using System.Collections.Generic;
+
+    public class BaseHistoryVm
     {
         public int LogId { get; set; }
-        
+
         public int RecordId { get; set; }
 
         public DateTime Date { get; set; }
@@ -20,18 +18,15 @@ namespace SampleLogMaker.ViewModels
         public IEnumerable<LogDetail> Details = new List<LogDetail>();
     }
 
-    public class ChangedHistoryVM : BaseHistoryVM
+    public class ChangedHistoryVm : BaseHistoryVm
     {
-        
     }
 
-    public class DeletedHistoryVM : BaseHistoryVM
+    public class DeletedHistoryVm : BaseHistoryVm
     {
-        
     }
 
-    public class AddedHistoryVM : BaseHistoryVM
+    public class AddedHistoryVm : BaseHistoryVm
     {
-        
     }
 }

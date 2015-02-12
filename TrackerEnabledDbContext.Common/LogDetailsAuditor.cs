@@ -1,16 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
-using TrackerEnabledDbContext.Common.Extensions;
-using TrackerEnabledDbContext.Common.Models;
-
-namespace TrackerEnabledDbContext.Common
+﻿namespace TrackerEnabledDbContext.Common
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Data.Entity;
+    using System.Data.Entity.Infrastructure;
+    using System.Linq;
+
+    using TrackerEnabledDbContext.Common.Extensions;
+    using TrackerEnabledDbContext.Common.Models;
+
     public class LogDetailsAuditor : IDisposable
     {
-        private readonly DbEntityEntry _dbEntry;
-        private readonly AuditLog _log;
+        readonly DbEntityEntry _dbEntry;
+
+        readonly AuditLog _log;
 
         public LogDetailsAuditor(DbEntityEntry dbEntry, AuditLog log)
         {
@@ -22,27 +25,25 @@ namespace TrackerEnabledDbContext.Common
         {
             var type = _dbEntry.Entity.GetType().GetEntityType();
 
-            foreach (var propertyName in _dbEntry.OriginalValues.PropertyNames)
-            {
-                if (type.IsTrackingEnabled(propertyName) && IsValueChanged(propertyName))
-                {
-                    yield return new AuditLogDetail
-                    {
-                        ColumnName = type.GetColumnName(propertyName),
-                        OrginalValue = OriginalValue(propertyName),
-                        NewValue = CurrentValue(propertyName),
-                        Log = _log
-                    };
-                }
-            }
+            return from propertyName in this._dbEntry.OriginalValues.PropertyNames
+                   where
+                       type.IsTrackingEnabled(propertyName) &&
+                       this.IsValueChanged(propertyName)
+                   select new AuditLogDetail
+                              {
+                                  ColumnName = type.GetColumnName(propertyName),
+                                  OrginalValue = this.OriginalValue(propertyName),
+                                  NewValue = this.CurrentValue(propertyName),
+                                  Log = this._log
+                              };
         }
 
-        private bool IsValueChanged(string propertyName)
+        bool IsValueChanged(string propertyName)
         {
             return !Equals(OriginalValue(propertyName), CurrentValue(propertyName));
         }
 
-        private string OriginalValue(string propertyName)
+        string OriginalValue(string propertyName)
         {
             string originalValue;
 
@@ -59,7 +60,7 @@ namespace TrackerEnabledDbContext.Common
             return originalValue;
         }
 
-        private string CurrentValue(string propertyName)
+        string CurrentValue(string propertyName)
         {
             string newValue;
 
@@ -68,8 +69,9 @@ namespace TrackerEnabledDbContext.Common
                 var value = _dbEntry.GetCurrentValue(propertyName);
                 newValue = (value != null) ? value.ToString() : null;
             }
-            catch (InvalidOperationException) // It will be invalid operation when its in deleted state. in that case, new value should be null
+            catch (InvalidOperationException)
             {
+                // It will be invalid operation when its in deleted state. in that case, new value should be null
                 newValue = null;
             }
 
@@ -78,7 +80,6 @@ namespace TrackerEnabledDbContext.Common
 
         public void Dispose()
         {
-            
         }
     }
 }

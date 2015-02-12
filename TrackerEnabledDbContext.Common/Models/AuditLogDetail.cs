@@ -1,8 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace TrackerEnabledDbContext.Common.Models
+﻿namespace TrackerEnabledDbContext.Common.Models
 {
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+
     public class AuditLogDetail
     {
         [Key]
@@ -17,6 +17,7 @@ namespace TrackerEnabledDbContext.Common.Models
         public string NewValue { get; set; }
 
         public virtual int AuditLogId { get; set; }
+
         [ForeignKey("AuditLogId")]
         public virtual AuditLog Log { get; set; }
     }

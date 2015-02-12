@@ -1,11 +1,14 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SampleLogMaker.Models;
-using System.Linq;
-using TrackerEnabledDbContext.Common.Models;
-
-namespace Tests
+﻿namespace Tests
 {
+    using System;
+    using System.Linq;
+
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+    using SampleLogMaker.Models;
+
+    using TrackerEnabledDbContext.Common.Models;
+
     [TestClass]
     public class Tracker_Tests : PersistanceTests
     {
@@ -13,10 +16,10 @@ namespace Tests
         public void Can_track_row_addition()
         {
             //add a blog
-            var blog = ModelFactory.CreateBlog(db);
+            var blog = this.DB.CreateBlog();
 
             //fetch log for it
-            var log = db.GetLogs<Blog>(blog.Id).SingleOrDefault(x => x.EventType == EventType.Added);
+            var log = this.DB.GetLogs<Blog>(blog.Id).SingleOrDefault(x => x.EventType == EventType.Added);
 
             Assert.IsNotNull(log);
         }
@@ -25,16 +28,16 @@ namespace Tests
         public void Can_track_deletion()
         {
             //create log
-            var blog = ModelFactory.CreateBlog(db);
-            string blogId = blog.Id.ToString();
+            var blog = this.DB.CreateBlog();
+            var blogId = blog.Id.ToString();
             Assert.IsTrue(blog.Id > 0);
 
             //remove log
-            db.Blogs.Remove(blog);
-            db.SaveChanges(ModelFactory.USERNAME);
+            this.DB.Blogs.Remove(blog);
+            this.DB.SaveChanges(ModelFactory.Username);
 
             //fetch removal log
-            var log = db.GetLogs<Blog>(blogId).SingleOrDefault(x => x.RecordId == blogId && x.EventType == EventType.Deleted);
+            var log = this.DB.GetLogs<Blog>(blogId).SingleOrDefault(x => x.RecordId == blogId && x.EventType == EventType.Deleted);
             Assert.IsNotNull(log);
         }
 
@@ -42,16 +45,19 @@ namespace Tests
         public void Can_track_local_propery_change()
         {
             //create log
-            var blog = ModelFactory.CreateBlog(db);
+            var blog = this.DB.CreateBlog();
 
             //change property
             var oldTitle = blog.Title;
             var newTitle = Guid.NewGuid().ToString();
             blog.Title = newTitle;
-            db.SaveChanges(ModelFactory.USERNAME);
+            this.DB.SaveChanges(ModelFactory.Username);
 
             //fetch log
-            var log = db.GetLogs<Blog>(blog.Id).ToList().SingleOrDefault(x => x.RecordId == blog.Id.ToString() && x.EventType == EventType.Modified);
+            var log =
+                this.DB.GetLogs<Blog>(blog.Id)
+                    .ToList()
+                    .SingleOrDefault(x => x.RecordId == blog.Id.ToString() && x.EventType == EventType.Modified);
             Assert.IsNotNull(log);
             Assert.IsTrue(log.LogDetails.Any(x => x.ColumnName == "Title" && x.NewValue == newTitle && x.OrginalValue == oldTitle));
         }
@@ -59,19 +65,21 @@ namespace Tests
         [TestMethod]
         public void Can_track_navigational_property_change()
         {
-            var blog1 = db.CreateBlog();
-            var comment = db.CreateComment(blog1);
+            var blog1 = this.DB.CreateBlog();
+            var comment = this.DB.CreateComment(blog1);
 
-            var blog2 = db.CreateBlog();
+            var blog2 = this.DB.CreateBlog();
             comment.ParentBlog = blog2;
 
-            var state = db.Entry<Comment>(comment);
+            var state = this.DB.Entry(comment);
 
-            db.SaveChanges(ModelFactory.USERNAME);
+            this.DB.SaveChanges(ModelFactory.Username);
 
             //fetch log
-            var logPresent = db.GetLogs<Comment>(comment.Id).ToList()
-                .Any(x=>x.EventType == EventType.Modified);
+            var logPresent = this.DB
+                                 .GetLogs<Comment>(comment.Id)
+                                 .ToList()
+                                 .Any(x => x.EventType == EventType.Modified);
             Assert.IsTrue(logPresent);
         }
     }

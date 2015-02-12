@@ -1,23 +1,27 @@
-﻿using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using TrackerEnabledDbContext.Common.Extensions;
-using TrackerEnabledDbContext.Common.Interfaces;
-using TrackerEnabledDbContext.Common.Models;
-
-namespace TrackerEnabledDbContext.Common
+﻿namespace TrackerEnabledDbContext.Common
 {
+    using System.Collections.Generic;
+    using System.Data.Entity;
+    using System.Linq;
+
+    using TrackerEnabledDbContext.Common.Extensions;
+    using TrackerEnabledDbContext.Common.Interfaces;
+    using TrackerEnabledDbContext.Common.Models;
+
     public static class CommonTracker
     {
         public static int SaveChanges(ITrackerContext dbContext, object userName)
         {
             // Get all Deleted/Modified entities (not Unmodified or Detached or Added)
-            foreach (var ent in dbContext.ChangeTracker.Entries().Where(p => p.State == EntityState.Deleted || p.State == EntityState.Modified))
+            foreach (var ent in dbContext.ChangeTracker
+                                         .Entries()
+                                         .Where(p => p.State == EntityState.Deleted || p.State == EntityState.Modified))
             {
                 using (var auditer = new LogAuditor(ent))
                 {
                     var record = auditer.CreateLogRecord(userName,
-                    ent.State == EntityState.Modified ? EventType.Modified : EventType.Deleted, dbContext);
+                                                         ent.State == EntityState.Modified ? EventType.Modified : EventType.Deleted,
+                                                         dbContext);
                     if (record != null)
                     {
                         dbContext.AuditLog.Add(record);
@@ -73,11 +77,12 @@ namespace TrackerEnabledDbContext.Common
         /// Get all logs for the given model type for a specific record
         /// </summary>
         /// <typeparam name="TTable">Type of domain model</typeparam>
+        /// <param name="context"></param>
         /// <param name="primaryKey">primary key of record</param>
         /// <returns></returns>
         public static IEnumerable<AuditLog> GetLogs<TTable>(ITrackerContext context, object primaryKey)
         {
-            string key = primaryKey.ToString();
+            var key = primaryKey.ToString();
             var tableName = typeof(TTable).GetTableName(context);
             return context.AuditLog.Where(x => x.TableName == tableName && x.RecordId == key);
         }
@@ -85,14 +90,14 @@ namespace TrackerEnabledDbContext.Common
         /// <summary>
         /// Get all logs for the given table name for a specific record
         /// </summary>
+        /// <param name="context"></param>
         /// <param name="tableName">table name</param>
         /// <param name="primaryKey">primary key of record</param>
         /// <returns></returns>
         public static IEnumerable<AuditLog> GetLogs(ITrackerContext context, string tableName, object primaryKey)
         {
-            string key = primaryKey.ToString();
+            var key = primaryKey.ToString();
             return context.AuditLog.Where(x => x.TableName == tableName && x.RecordId == key);
         }
-
     }
 }

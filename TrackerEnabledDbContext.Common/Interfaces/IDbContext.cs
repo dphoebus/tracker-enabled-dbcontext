@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
-using System.Data.Entity.Validation;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace TrackerEnabledDbContext.Common.Interfaces
+﻿namespace TrackerEnabledDbContext.Common.Interfaces
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Data.Entity;
+    using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Validation;
+    using System.Threading;
+    using System.Threading.Tasks;
+
     public interface IDbContext : IDisposable
     {
         DbChangeTracker ChangeTracker { get; }

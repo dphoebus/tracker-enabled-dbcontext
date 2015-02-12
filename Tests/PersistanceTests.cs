@@ -1,27 +1,26 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SampleLogMaker.Models;
-using System.Data.Entity;
-
-namespace Tests
+﻿namespace Tests
 {
+    using System.Data.Entity;
+
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+
     [TestClass]
     public class PersistanceTests
     {
-        public TestTrackerContext db = new TestTrackerContext();
-        public DbContextTransaction transaction = null;
+        public TestTrackerContext DB = new TestTrackerContext();
+
+        public DbContextTransaction Transaction = null;
 
         [TestInitialize]
         public virtual void Initialize()
         {
-            transaction = db.Database.BeginTransaction();
+            this.Transaction = this.DB.Database.BeginTransaction();
         }
 
         [TestCleanup]
         public virtual void CleanUp()
         {
-            transaction.Rollback();
+            this.Transaction.Rollback();
         }
-
     }
 }
